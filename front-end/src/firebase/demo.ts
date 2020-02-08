@@ -11,7 +11,7 @@ export function makePayment(amount: number, userId: string): Promise<boolean> {
       if (data) {
         data.amountSpent += amount;
         return userDoc
-          .update(data)
+          .set(data)
           .then(() => true)
           .catch(err => {
             console.log(err);
@@ -37,7 +37,7 @@ export function nextWeek(userId: string): Promise<boolean> {
         data.amountSpent = 0;
         data.weekNumber = (data.weekNumber + 1) % 4;
         return userDoc
-          .update(data)
+          .set(data)
           .then(() => true)
           .catch(err => {
             console.log(err);
@@ -70,7 +70,7 @@ export function resetUser(userId: string): Promise<boolean> {
       if (data) {
         const ducks = data.ducks;
         return userDoc
-          .update(userSettings)
+          .set(userSettings)
           .then(() => {
             const duckDoc = database.collection("ducks").doc("DUCKS");
             return duckDoc
@@ -82,7 +82,7 @@ export function resetUser(userId: string): Promise<boolean> {
                     data.ducks[duck] = "";
                   }
                   return duckDoc
-                    .update(data)
+                    .set(data)
                     .then(() => true)
                     .catch(err => {
                       console.log(err);
@@ -134,6 +134,37 @@ export function unpairAllDucks(): Promise<boolean> {
             return true;
           })
           .catch(() => false);
+      } else {
+        return false;
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return false;
+    });
+}
+
+function quack(duckId: string): Promise<boolean> {
+  return database
+    .collection("ducks")
+    .doc("DUCKS")
+    .get()
+    .then(value => {
+      const data = value.data();
+      if (data) {
+        if (data.ducks[duckId] !== undefined) {
+          return database
+            .collection("ducks")
+            .doc(`${duckId}_quack`)
+            .set({ quacking: true })
+            .then(() => true)
+            .catch(err => {
+              console.log(err);
+              return false;
+            });
+        } else {
+          return false;
+        }
       } else {
         return false;
       }

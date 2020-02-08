@@ -45,7 +45,7 @@ const QuackPage: React.FunctionComponent<QuackPageProps> = () => {
       .firestore()
       .collection("ducks")
       .doc(`${duckId}_quack`)
-      .update({ quacking: false });
+      .set({ quacking: false });
   }
 
   return (

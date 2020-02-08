@@ -3,35 +3,80 @@ import { User } from "firebase";
 import { Typography, Button } from "@material-ui/core";
 import ControlPage from "../../src/components/ControlPage";
 import LoginPage from "./LoginPage";
-import { firebaseApp } from "../firebase/config";
+import { firebaseApp, UserData } from "../firebase/config";
+import { getCreateUser } from "../firebase/user";
 
 const MainPage: React.FunctionComponent = () => {
-  const [isLoggedIn, setIfLoggedIn] = useState(false);
-  const [isLoggingIn, setIfLoggingIn] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const handleLoginButton = () => {
-    setIfLoggingIn(true);
-    setIfLoggedIn(false);
+    setIsLoggingIn(true);
   };
 
   const handleLogin = () => {
-    setIfLoggingIn(false);
-    setIfLoggedIn(true);
+    setIsLoggingIn(false);
+    const currentUser = firebaseApp.auth().currentUser;
+    if (currentUser !== null) {
+      if (getCreateUser(currentUser.uid)) {
+        setUserId(currentUser.uid);
+      } else {
+        console.log("Error getting user; logging out...");
+        handleLogout();
+      }
+    }
   };
 
   const handleLogout = () => {
-    setIfLoggedIn(false);
-    setIfLoggingIn(false);
+    setUserId("");
+    setUserData(null);
     firebaseApp.auth().signOut();
   };
 
+  firebaseApp.auth().onAuthStateChanged(user => {
+    if (user) {
+      handleLogin();
+    } else {
+      handleLogout();
+    }
+  });
+
+  if (userId) {
+    firebaseApp
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .onSnapshot({
+        next: snapshot => {
+          const data = snapshot.data() as UserData | undefined;
+          if (data) {
+            setUserData(data);
+          }
+        }
+      });
+  }
+
   return (
     <Fragment>
-      {!isLoggedIn && isLoggingIn && <LoginPage handleLogin={handleLogin} />}
-      {isLoggedIn && !isLoggingIn && (
-        <ControlPage handleLogout={handleLogout} />
+      {!userId && isLoggingIn && <LoginPage handleLogin={handleLogin} />}
+      {userId && (
+        <Fragment>
+          {!userData && (
+            <Typography variant="body1">
+              Error: There is a userId but not a userData object...
+            </Typography>
+          )}
+          {userData && (
+            <ControlPage
+              handleLogout={handleLogout}
+              userId={userId}
+              userData={userData}
+            />
+          )}
+        </Fragment>
       )}
-      {!isLoggedIn && !isLoggingIn && (
+      {!userId && !isLoggingIn && (
         <Button variant="contained" onClick={handleLoginButton}>
           Click here to login!
         </Button>

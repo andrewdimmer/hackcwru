@@ -1,21 +1,25 @@
 import React, { Fragment } from "react";
 import { Typography, Button } from "@material-ui/core";
-import { firebaseApp } from "../firebase/config";
+import { firebaseApp, UserData } from "../firebase/config";
+// import PairDucksModule from "./Modules/PairDuckModule";
 declare interface ControlPageProps {
+  userId: string;
+  userData: UserData;
   handleLogout: () => void;
 }
 
 const ControlPage: React.FunctionComponent<ControlPageProps> = ({
+  userId,
+  userData,
   handleLogout
 }) => {
-  firebaseApp.auth().onAuthStateChanged(function(user) {
-    if (user === null) {
-      handleLogout();
-    }
-  });
   return (
     <Fragment>
       <Typography variant="h3"> Ducks! </Typography>
+      {/*<PairDucksModule
+        userId={userId}
+        myDucks={userData.ducks}
+      ></PairDucksModule>*/}
       <Button onClick={handleLogout}> Log Out </Button>
     </Fragment>
   );
