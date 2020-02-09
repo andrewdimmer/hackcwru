@@ -4,21 +4,15 @@ import React, { Fragment } from "react";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { firebaseApp } from "../firebase/config";
 
-declare interface LoginProps {
-  handleLogin: () => void;
-}
-const LoginPage: React.FunctionComponent<LoginProps> = ({ handleLogin }) => {
+declare interface LoginProps {}
+
+const LoginPage: React.FunctionComponent<LoginProps> = () => {
   const uiConfig = {
     signInFlow: "popup",
     signInSuccessUrl: "",
     credentialHelper: firebaseui.auth.CredentialHelper.NONE,
     signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
   };
-  firebaseApp.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      handleLogin();
-    }
-  });
 
   return (
     <Fragment>

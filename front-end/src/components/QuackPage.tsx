@@ -21,6 +21,7 @@ const QuackPage: React.FunctionComponent<QuackPageProps> = () => {
     .doc(`${duckId}_quack`)
     .onSnapshot({
       next: snapshot => {
+        console.log("Updating");
         const data = snapshot.data();
         if (data) {
           setFoundDuck(true);
