@@ -1,5 +1,12 @@
 import React, { Fragment } from "react";
-import { Typography, Button, TextField } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  TextField,
+  Box,
+  CardActions
+} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import {
   FinanceSettings,
   ConcentrationSettings,
@@ -40,25 +47,44 @@ const Concentration: React.FunctionComponent<ConcentrationProps> = ({
 
   return (
     <Fragment>
-      <Typography variant="h6" gutterBottom>
-        {" "}
-        Study time settings:{" "}
-      </Typography>
-      <TextField
-        label="Study time (minutes)"
-        variant="outlined"
-        onChange={e => (tempWork = e.target.value)}
-      >
-        {" "}
-      </TextField>
-      <TextField
-        label="Break time (minutes)"
-        variant="outlined"
-        onChange={e => (tempBreak = e.target.value)}
-      >
-        {" "}
-      </TextField>
-      <Button onClick={SaveConcentration}> Save study time settings </Button>
+      <Box component="div" display="inline" p={1} m={1}>
+        <CardActions>
+          <Typography variant="h5" align="right" gutterBottom>
+            {" "}
+            Study time settings:{" "}
+          </Typography>
+        </CardActions>
+      </Box>
+      <Grid container xs={9}>
+        <Grid item xs={3}>
+          <TextField
+            label="Study time (minutes)"
+            variant="standard"
+            onChange={e => (tempWork = e.target.value)}
+          >
+            {" "}
+          </TextField>
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Break time (minutes)"
+            variant="standard"
+            onChange={e => (tempBreak = e.target.value)}
+          >
+            {" "}
+          </TextField>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={SaveConcentration}
+          >
+            {" "}
+            Save study time settings{" "}
+          </Button>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };
