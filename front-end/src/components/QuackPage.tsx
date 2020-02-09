@@ -59,7 +59,7 @@ const QuackPage: React.FunctionComponent<QuackPageProps> = () => {
         <Fragment>
           <Typography variant="h2">Now Quacking...</Typography>
           <AudioPlayer
-            src="/assets/audio/quack.mp3"
+            src={`/assets/audio/quack${Math.ceil(Math.random() * 10)}.wav`}
             onEnded={() => stopQuacking()}
             ref={quacker}
           ></AudioPlayer>
