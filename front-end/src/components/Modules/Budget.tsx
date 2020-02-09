@@ -1,5 +1,12 @@
 import React, { Fragment, useState } from "react";
-import { Typography, Button, TextField } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  TextField,
+  Box,
+  CardActions
+} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import { FinanceSettings, UserData, firebaseApp } from "../../firebase/config";
 import { User } from "firebase";
 import {
@@ -69,36 +76,61 @@ const BudgetPage: React.FunctionComponent<BudgetProps> = ({
 
   return (
     <Fragment>
-      <TextField
-        label="Monthly budget"
-        variant="outlined"
-        onChange={e => handleChangeMonth(e.target.value)}
-      ></TextField>
-      <TextField
-        label="Week 1"
-        variant="filled"
-        value={week1Budget}
-        onChange={e => handleChangeWeek1(e.target.value)}
-      ></TextField>
-      <TextField
-        label="Week 2"
-        variant="filled"
-        value={week2Budget}
-        onChange={e => handleChangeWeek2(e.target.value)}
-      ></TextField>
-      <TextField
-        label="Week 3"
-        variant="filled"
-        value={week3Budget}
-        onChange={e => handleChangeWeek3(e.target.value)}
-      ></TextField>
-      <TextField
-        label="Week 4"
-        variant="filled"
-        value={week4Budget}
-        onChange={e => handleChangeWeek4(e.target.value)}
-      ></TextField>
-      <Button onClick={SaveBudget}> Save Budget Settings </Button>
+      <Box component="div" display="inline" p={1} m={1}>
+        <CardActions>
+          <Typography variant="h5" align="right" gutterBottom>
+            {" "}
+            Study time settings:{" "}
+          </Typography>
+        </CardActions>
+      </Box>
+      <Grid container spacing={1}>
+        <Grid item xs={2}>
+          <TextField
+            label="Monthly budget"
+            variant="standard"
+            onChange={e => handleChangeMonth(e.target.value)}
+          ></TextField>
+        </Grid>
+        <Grid item xs={2}>
+          <TextField
+            label="Week 1"
+            variant="standard"
+            value={week1Budget}
+            onChange={e => handleChangeWeek1(e.target.value)}
+          ></TextField>
+        </Grid>
+        <Grid item xs={2}>
+          <TextField
+            label="Week 2"
+            variant="standard"
+            value={week2Budget}
+            onChange={e => handleChangeWeek2(e.target.value)}
+          ></TextField>
+        </Grid>
+        <Grid item xs={2}>
+          <TextField
+            label="Week 3"
+            variant="standard"
+            value={week3Budget}
+            onChange={e => handleChangeWeek3(e.target.value)}
+          ></TextField>{" "}
+        </Grid>
+        <Grid item xs={2}>
+          <TextField
+            label="Week 4"
+            variant="standard"
+            value={week4Budget}
+            onChange={e => handleChangeWeek4(e.target.value)}
+          ></TextField>
+        </Grid>
+        <Grid item xs={2}>
+          <Button color="primary" variant="contained" onClick={SaveBudget}>
+            {" "}
+            Save Budget Settings{" "}
+          </Button>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };
