@@ -1,27 +1,32 @@
 import React, { Fragment } from "react";
-import {User} from "firebase";
-import {Typography, Button} from "@material-ui/core";
-import {firebaseApp} from "../firebase/config";
+import { Typography, Button } from "@material-ui/core";
+import { firebaseApp, UserData } from "../firebase/config";
+// import PairDucksModule from "./Modules/PairDuckModule";
+import Concentration from "../components/Modules/Concentration";
+import BudgetPage from "./Modules/Budget";
 declare interface ControlPageProps {
-    handleLogout: () => void;
-  }
+  userId: string;
+  userData: UserData;
+  handleLogout: () => void;
+}
 
-  const ControlPage: React.FunctionComponent<ControlPageProps> = ({
-    handleLogout
-  }) => 
-  {
-    firebaseApp.auth().onAuthStateChanged(function(user) {
-        if (user === null) {
-          handleLogout();
-        }
-      }); 
-    return(
-        <Fragment>
-            <Typography variant="h3"> Logged in! </Typography>
-            <Button onClick={handleLogout}> Log Out </Button>
-        </Fragment>
-    ); 
-  }
-
+const ControlPage: React.FunctionComponent<ControlPageProps> = ({
+  userId,
+  userData,
+  handleLogout
+}) => {
+  return (
+    <Fragment>
+      <Typography variant="h3"> Ducks! </Typography>
+      {/*<PairDucksModule
+        userId={userId}
+        myDucks={userData.ducks}
+      ></PairDucksModule>*/}
+      <Concentration userID={userId} userData={userData} />
+      <BudgetPage userID={userId} userData={userData} />
+      <Button onClick={handleLogout}> Log Out </Button>
+    </Fragment>
+  );
+};
 
 export default ControlPage;

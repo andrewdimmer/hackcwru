@@ -43,7 +43,7 @@ export function pairDuck(duckId: string, userId: string): Promise<boolean> {
         if (!ducks[duckId]) {
           ducks[duckId] = userId;
           return ducksDoc
-            .update(ducks)
+            .set(ducks)
             .then(() => {
               const userDoc = database.collection("users").doc(userId);
               return userDoc.get().then(value => {
@@ -51,7 +51,7 @@ export function pairDuck(duckId: string, userId: string): Promise<boolean> {
                 if (data) {
                   data.ducks.push(duckId);
                   return userDoc
-                    .update(data)
+                    .set(data)
                     .then(() => true)
                     .catch(err => {
                       console.log(err);
@@ -92,7 +92,7 @@ export function unpairDuck(duckId: string): Promise<boolean> {
           const userId = ducks[duckId];
           ducks[duckId] = "";
           return ducksDoc
-            .update(ducks)
+            .set(ducks)
             .then(() => {
               const userDoc = database.collection("users").doc(userId);
               return userDoc.get().then(value => {
@@ -101,7 +101,7 @@ export function unpairDuck(duckId: string): Promise<boolean> {
                   const duckToRemove = data.ducks.indexOf(duckId);
                   data.ducks.splice(duckToRemove, 1);
                   return userDoc
-                    .update(data)
+                    .set(data)
                     .then(() => true)
                     .catch(err => {
                       console.log(err);
@@ -142,7 +142,7 @@ export function updateConcentrationMode(
       if (data) {
         data.concentration = settings;
         return userDoc
-          .update(data)
+          .set(data)
           .then(() => true)
           .catch(err => {
             console.log(err);
@@ -170,7 +170,7 @@ export function updateFinanceMode(
       if (data) {
         data.finance = settings;
         return userDoc
-          .update(data)
+          .set(data)
           .then(() => true)
           .catch(err => {
             console.log(err);
@@ -211,7 +211,7 @@ export function getCreateUser(userId: string): Promise<UserData | null> {
           weekNumber: 1
         };
         return userDoc
-          .update(userSettings)
+          .set(userSettings)
           .then(() => userSettings)
           .catch(err => {
             console.log(err);
