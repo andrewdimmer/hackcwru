@@ -1,10 +1,21 @@
 import React, { Fragment, useState } from "react";
 import { User } from "firebase";
-import { Typography, Button } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  makeStyles,
+  Theme,
+  ButtonBase,
+  withStyles,
+  Card,
+  CardContent,
+  CardActions
+} from "@material-ui/core";
 import ControlPage from "../../src/components/ControlPage";
 import LoginPage from "./LoginPage";
 import { firebaseApp, UserData } from "../firebase/config";
 import { getCreateUser } from "../firebase/user";
+import { findByLabelText } from "@testing-library/react";
 
 const MainPage: React.FunctionComponent = () => {
   const [userId, setUserId] = useState("");
@@ -33,6 +44,44 @@ const MainPage: React.FunctionComponent = () => {
     setUserData(null);
     firebaseApp.auth().signOut();
   };
+
+  //Taken off of the Material-ui.com website, from their complex button example
+  const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+      //minWidth: 275,
+      display: "flex",
+
+      "justify-content": "center",
+
+      "flex-direction": "column",
+
+      "align-items": "center",
+
+      "flex-wrap": "wrap"
+    },
+
+    title: {
+      fontSize: 14
+    },
+
+    pos: {
+      marginBottom: 12
+    }
+  }));
+
+  const classes = useStyles();
+
+  const StyledButton = withStyles({
+    root: {
+      "background-image": "linear-gradient(red, yellow, blue)",
+      height: "90%",
+      width: "60%",
+      color: "blue"
+    },
+    label: {
+      testTransform: "capitalize"
+    }
+  })(Button);
 
   firebaseApp.auth().onAuthStateChanged(user => {
     if (user) {
@@ -76,10 +125,43 @@ const MainPage: React.FunctionComponent = () => {
           )}
         </Fragment>
       )}
-      {!userId && !isLoggingIn && (
-        <Button variant="contained" onClick={handleLoginButton}>
+      {/* <Button
+          variant="contained"
+          onClick={handleLoginButton}
+          className={classes.login}
+          color="primary"
+        >
           Click here to login!
-        </Button>
+        </Button> */}
+      {!userId && !isLoggingIn && (
+        <span className={classes.root}>
+          <Card className={classes.root} variant="outlined">
+            <CardContent className={classes.root}>
+              <Typography
+                className={classes.title}
+                color="textSecondary"
+                gutterBottom
+              >
+                The Buck Duck Demonstration
+              </Typography>
+              <Typography variant="h3" component="h3" color="primary">
+                A Project Inspired By a Love of Ducks and Technology
+              </Typography>
+              <Typography className={classes.pos} color="secondary">
+                Andrew Dimmer, Nathan Dimmer, James Lynott, Allison Broski
+              </Typography>
+              <Typography variant="body2" component="p" color="textPrimary">
+                Walking talking what's going on. Come up with something that
+                doesn't sound wrong
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <StyledButton variant="contained" onClick={handleLoginButton}>
+                Click Here to Login!
+              </StyledButton>
+            </CardActions>
+          </Card>
+        </span>
       )}
     </Fragment>
   );
