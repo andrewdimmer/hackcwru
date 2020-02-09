@@ -1,6 +1,19 @@
 import React, { Fragment, useState } from "react";
 import { User } from "firebase";
-import { Typography, Button } from "@material-ui/core";
+import {
+  Typography,
+  Button,
+  makeStyles,
+  Theme,
+  ButtonBase,
+  withStyles,
+  Box,
+  Card,
+  CardContent,
+  CardActions
+} from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import container from "@material-ui/core/Container";
 import ControlPage from "../../src/components/ControlPage";
 import LoginPage from "./LoginPage";
 import { firebaseApp, UserData } from "../firebase/config";
@@ -33,6 +46,43 @@ const MainPage: React.FunctionComponent = () => {
     setUserData(null);
     firebaseApp.auth().signOut();
   };
+  /*
+ const useStyles = makeStyles((theme: Theme) => ({
+    root: {
+      //minWidth: 275,
+      display: "flex",
+
+      "justify-content": "center",
+
+      "flex-direction": "column",
+
+      "align-items": "center",
+
+      "flex-wrap": "wrap"
+    },
+
+    title: {
+      fontSize: 14
+    },
+
+    pos: {
+      marginBottom: 12
+    }
+  }));
+
+  const classes = useStyles(); */
+
+  const StyledButton = withStyles({
+    root: {
+      "background-image": "linear-gradient(red, yellow, blue)",
+      height: "90%",
+      width: "60%",
+      color: "blue"
+    },
+    label: {
+      testTransform: "capitalize"
+    }
+  })(Button);
 
   firebaseApp.auth().onAuthStateChanged(user => {
     if (user) {
@@ -77,9 +127,43 @@ const MainPage: React.FunctionComponent = () => {
         </Fragment>
       )}
       {!userId && !isLoggingIn && (
-        <Button variant="contained" onClick={handleLoginButton}>
-          Click here to login!
-        </Button>
+        <Grid container justify="center" alignItems="center" spacing={3}>
+          <Grid item xs={3}>
+            <Typography color="textSecondary" gutterBottom align="center">
+              Inspired by a love of ducks and technology
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Typography
+              variant="h3"
+              component="h3"
+              color="primary"
+              align="center"
+            >
+              The Buck Duck Demonstration
+            </Typography>{" "}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography color="textSecondary" align="center">
+              Andrew Dimmer, Nathan Dimmer, James Lynott, Allison Broski
+            </Typography>{" "}
+          </Grid>
+          <Grid item xs={4}>
+            <Typography
+              variant="body2"
+              component="p"
+              color="textPrimary"
+              align="center"
+            >
+              A mindful mallard to help you reflect, plan, and perservere.
+            </Typography>{" "}
+          </Grid>
+          <Grid item xs={4}>
+            <StyledButton variant="contained" onClick={handleLoginButton}>
+              Click Here to Login!
+            </StyledButton>{" "}
+          </Grid>
+        </Grid>
       )}
     </Fragment>
   );

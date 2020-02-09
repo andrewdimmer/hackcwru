@@ -37,11 +37,11 @@ const ControlPage: React.FunctionComponent<ControlPageProps> = ({
         <Typography variant="body1" align="center">
           {" "}
           Setup your fowl friend to help you keep track of your finances and
-          hone your studying skills! Use the "Study Skills" section to time how
-          long you've been studying and when you should take a break. In the
-          "Budget" section, you can configure a monthly spending goal, and even
-          fine-tune a weekly budget to account for variances in your personal
-          financial situation.{" "}
+          hone your studying skills! Use the "Study Skills" section to keep
+          track of how long you've been studying and when you should take a
+          break. In the "Budget" section, you can configure a monthly spending
+          goal, and even fine-tune a weekly spending goal to account for
+          variances in your personal financial situation.{" "}
         </Typography>{" "}
       </Box>
 
