@@ -3,6 +3,7 @@ import { Typography, Button } from "@material-ui/core";
 import { firebaseApp, UserData } from "../firebase/config";
 // import PairDucksModule from "./Modules/PairDuckModule";
 import Concentration from "../components/Modules/Concentration";
+import BudgetPage from "./Modules/Budget";
 declare interface ControlPageProps {
   userId: string;
   userData: UserData;
@@ -22,6 +23,7 @@ const ControlPage: React.FunctionComponent<ControlPageProps> = ({
         myDucks={userData.ducks}
       ></PairDucksModule>*/}
       <Concentration userID={userId} userData={userData} />
+      <BudgetPage userID={userId} userData={userData} />
       <Button onClick={handleLogout}> Log Out </Button>
     </Fragment>
   );
