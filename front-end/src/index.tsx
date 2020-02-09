@@ -4,12 +4,13 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import MainPage from "./components/MainPage";
+import DemoPage from './components/DemoPage';
 import QuackPage from "./components/QuackPage";
 import { UserData } from "./firebase/config";
 
 const url = window.location.href.toLowerCase();
 if (url.indexOf("demo") > 0) {
-  ReactDOM.render(<App />, document.getElementById("root"));
+  ReactDOM.render(<DemoPage />, document.getElementById('root'));
 } else if (url.indexOf("quack") > 0) {
   ReactDOM.render(<QuackPage />, document.getElementById("root"));
 } else {
