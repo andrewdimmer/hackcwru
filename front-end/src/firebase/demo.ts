@@ -1,114 +1,47 @@
 import { UserData, firebaseApp } from "./config";
 import { unpairDuck } from "./user";
+import ky from "ky";
 const database = firebaseApp.firestore();
 
 export function makePayment(amount: number, userId: string): Promise<boolean> {
-  const userDoc = database.collection("users").doc(userId);
-  return userDoc
-    .get()
-    .then(value => {
-      const data = value.data() as UserData;
-      if (data) {
-        data.amountSpent += amount;
-        return userDoc
-          .set(data)
-          .then(() => true)
-          .catch(err => {
-            console.log(err);
-            return false;
-          });
-      } else {
-        return false;
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      return false;
-    });
+  return ky
+    .post(
+      "https://us-central1-hackcwru-2020-gcp.cloudfunctions.net/make_payment",
+      { body: JSON.stringify({ amount, userId }) }
+    )
+    .then(() => true)
+    .catch(() => false);
 }
 
 export function nextWeek(userId: string): Promise<boolean> {
-  const userDoc = database.collection("users").doc(userId);
-  return userDoc
-    .get()
-    .then(value => {
-      const data = value.data() as UserData;
-      if (data) {
-        data.amountSpent = 0;
-        data.weekNumber = (data.weekNumber + 1) % 4;
-        return userDoc
-          .set(data)
-          .then(() => true)
-          .catch(err => {
-            console.log(err);
-            return false;
-          });
-      } else {
-        return false;
-      }
+  return ky
+    .post(
+      "https://us-central1-hackcwru-2020-gcp.cloudfunctions.net/next_week",
+      { body: userId }
+    )
+    .then(() => true)
+    .catch(() => false);
+}
+
+export function quack(duckId: string): Promise<boolean> {
+  return ky
+    .post("https://us-central1-hackcwru-2020-gcp.cloudfunctions.net/quack", {
+      body: duckId
     })
-    .catch(err => {
-      console.log(err);
-      return false;
-    });
+    .then(() => true)
+    .catch(() => false);
 }
 
 export function resetUser(userId: string): Promise<boolean> {
-  const userSettings: UserData = {
-    userId,
-    ducks: [],
-    concentration: { work: 25, break: 5 },
-    finance: { total: 0, week1: 0, week2: 0, week3: 0, week4: 0, weekly: 0 },
-    amountSpent: 0,
-    weekNumber: 1
-  };
-  const userDoc = database.collection("users").doc("userId");
-  return userDoc
-    .get()
-    .then(value => {
-      const data = value.data();
-      if (data) {
-        const ducks = data.ducks;
-        return userDoc
-          .set(userSettings)
-          .then(() => {
-            const duckDoc = database.collection("ducks").doc("DUCKS");
-            return duckDoc
-              .get()
-              .then(value => {
-                const data = value.data();
-                if (data) {
-                  for (const duck in ducks) {
-                    data.ducks[duck] = "";
-                  }
-                  return duckDoc
-                    .set(data)
-                    .then(() => true)
-                    .catch(err => {
-                      console.log(err);
-                      return false;
-                    });
-                } else {
-                  return false;
-                }
-              })
-              .catch(err => {
-                console.log(err);
-                return false;
-              });
-          })
-          .catch(err => {
-            console.log(err);
-            return false;
-          });
-      } else {
-        return false;
+  return ky
+    .post(
+      "https://us-central1-hackcwru-2020-gcp.cloudfunctions.net/reset_user",
+      {
+        body: userId
       }
-    })
-    .catch(err => {
-      console.log(err);
-      return false;
-    });
+    )
+    .then(() => true)
+    .catch(() => false);
 }
 
 export function unpairAllDucks(): Promise<boolean> {
@@ -134,37 +67,6 @@ export function unpairAllDucks(): Promise<boolean> {
             return true;
           })
           .catch(() => false);
-      } else {
-        return false;
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      return false;
-    });
-}
-
-function quack(duckId: string): Promise<boolean> {
-  return database
-    .collection("ducks")
-    .doc("DUCKS")
-    .get()
-    .then(value => {
-      const data = value.data();
-      if (data) {
-        if (data.ducks[duckId] !== undefined) {
-          return database
-            .collection("ducks")
-            .doc(`${duckId}_quack`)
-            .set({ quacking: true })
-            .then(() => true)
-            .catch(err => {
-              console.log(err);
-              return false;
-            });
-        } else {
-          return false;
-        }
       } else {
         return false;
       }
