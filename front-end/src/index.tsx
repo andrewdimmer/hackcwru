@@ -1,16 +1,41 @@
+import { ThemeProvider } from "@material-ui/core";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
+import DemoPage from "./components/DemoPage";
 import MainPage from "./components/MainPage";
-import DemoPage from './components/DemoPage';
 import QuackPage from "./components/QuackPage";
 import { UserData } from "./firebase/config";
+import "./index.css";
+import * as serviceWorker from "./serviceWorker";
+import { theme } from "./Styles";
 
 const url = window.location.href.toLowerCase();
 if (url.indexOf("demo") > 0) {
-  ReactDOM.render(<DemoPage />, document.getElementById('root'));
+  // The initial values of all the states to prevent infinite reloads
+  let initialUsers: string[] = [];
+  let initialDucks: string[] = [];
+
+  // Getters so that the state initializes with a different value after an initial value is found.
+  const getInitialUsers = () => initialUsers;
+  const getInitialDucks = () => initialDucks;
+
+  // Setters to update what the initial state should be after a state change.
+  const setInitialUsers = (newUsers: string[]): void => {
+    initialUsers = newUsers;
+  };
+
+  const setInitialDucks = (newDucks: string[]): void => {
+    initialDucks = newDucks;
+  };
+  ReactDOM.render(
+    <DemoPage
+      getInitialUsers={getInitialUsers}
+      getInitialDucks={getInitialDucks}
+      setInitialUsers={setInitialUsers}
+      setInitialDucks={setInitialDucks}
+    />,
+    document.getElementById("root")
+  );
 } else if (url.indexOf("quack") > 0) {
   ReactDOM.render(<QuackPage />, document.getElementById("root"));
 } else {
@@ -35,14 +60,16 @@ if (url.indexOf("demo") > 0) {
     initUnpairedDucks = newUnpairedDucks;
   };
   ReactDOM.render(
-    <MainPage
-      getInitUserId={getInitUserId}
-      getInitUserData={getInitUserData}
-      getInitUnpairedDucks={getInitUnpairedDucks}
-      setInitUserId={setInitUserId}
-      setInitUserData={setInitUserData}
-      setInitUnpairedDucks={setInitUnpairedDucks}
-    />,
+    <ThemeProvider theme={theme}>
+      <MainPage
+        getInitUserId={getInitUserId}
+        getInitUserData={getInitUserData}
+        getInitUnpairedDucks={getInitUnpairedDucks}
+        setInitUserId={setInitUserId}
+        setInitUserData={setInitUserData}
+        setInitUnpairedDucks={setInitUnpairedDucks}
+      />
+    </ThemeProvider>,
     document.getElementById("root")
   );
 }

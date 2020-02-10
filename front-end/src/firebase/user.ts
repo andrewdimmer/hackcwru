@@ -1,11 +1,5 @@
-import {
-  FinanceSettings,
-  ConcentrationSettings,
-  UserData,
-  firebaseApp
-} from "./config";
 import ky from "ky";
-const database = firebaseApp.firestore();
+import { ConcentrationSettings, FinanceSettings, UserData } from "./config";
 
 export function pairDuck(duckId: string, userId: string): Promise<boolean> {
   return ky
@@ -54,40 +48,19 @@ export function updateFinanceMode(
 }
 
 export function getCreateUser(userId: string): Promise<UserData | null> {
-  const userDoc = database.collection("users").doc(userId);
-  return userDoc
-    .get()
+  return ky
+    .post(
+      "https://us-central1-hackcwru-2020-gcp.cloudfunctions.net/get_create_user",
+      { body: userId }
+    )
     .then(value => {
-      const data = value.data() as UserData | undefined;
-      if (data) {
-        return data;
-      } else {
-        const userSettings: UserData = {
-          userId,
-          ducks: [],
-          concentration: { work: 25, break: 5 },
-          finance: {
-            total: 0,
-            week1: 0,
-            week2: 0,
-            week3: 0,
-            week4: 0,
-            weekly: 0
-          },
-          amountSpent: 0,
-          weekNumber: 1
-        };
-        return userDoc
-          .set(userSettings)
-          .then(() => userSettings)
-          .catch(err => {
-            console.log(err);
-            return null;
-          });
-      }
+      return value
+        .text()
+        .then(string => JSON.parse(string))
+        .catch(err => {
+          console.log(err);
+          return null;
+        });
     })
-    .catch(err => {
-      console.log(err);
-      return null;
-    });
+    .catch(() => null);
 }

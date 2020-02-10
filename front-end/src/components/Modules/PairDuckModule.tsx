@@ -1,37 +1,43 @@
-import React, { Fragment } from "react";
 import {
-  Typography,
   Button,
-  MenuItem,
-  InputLabel,
-  Select,
   FormControl,
-  ListItem,
+  IconButton,
+  InputLabel,
   List,
+  ListItem,
   ListItemSecondaryAction,
-  ListItemText,
-  IconButton
+  MenuItem,
+  Paper,
+  Select,
+  Typography
 } from "@material-ui/core";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import { firebaseApp } from "../../firebase/config";
+import React, { Fragment } from "react";
 import { pairDuck, unpairDuck } from "../../firebase/user";
 declare interface PairModuleProps {
   userId: string;
   myDucks: string[];
   unpairedDucks: string[];
+  classes: any;
 }
 
 const PairDucksModule: React.FunctionComponent<PairModuleProps> = ({
   userId,
   myDucks,
-  unpairedDucks
+  unpairedDucks,
+  classes
 }) => {
   const [newDuck, setNewDuck] = React.useState("");
 
   return (
-    <Fragment>
-      <Typography variant="h3">Pair Ducks!</Typography>
-      <Typography variant="h4">Connect a new duck!</Typography>
+    <Paper className={classes.marginedPadded} elevation={3}>
+      <Typography variant="h4">Duck Management</Typography>
+      <Typography variant="h5">Connect a New Duck!</Typography>
+      <Typography variant="body1">
+        To get all the features from your duck, simply select it below, they
+        click the pair with duck button. This will link your duck to your
+        account, where you can manage your settings and enable additional modes.
+      </Typography>
       {unpairedDucks.length > 0 && (
         <Fragment>
           <FormControl fullWidth>
@@ -43,51 +49,71 @@ const PairDucksModule: React.FunctionComponent<PairModuleProps> = ({
               onChange={event => setNewDuck(event.target.value as string)}
             >
               {unpairedDucks.map(value => (
-                <MenuItem key={value} value={value}>
+                <MenuItem
+                  key={value}
+                  value={value}
+                  className={classes.margined}
+                >
                   {value}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
           <Button
+            className={classes.marginedPadded}
             disabled={!newDuck}
-            variant="contained"
             onClick={() => {
-              console.log("Pairing with duck...");
               pairDuck(newDuck, userId).then(worked => {
                 if (worked) {
                   setNewDuck("");
                 } else {
-                  console.log("Failed to pair...");
                 }
               });
             }}
+            color="primary"
+            variant="contained"
           >
             Pair with Duck!
           </Button>
         </Fragment>
       )}
       {unpairedDucks.length === 0 && (
-        <Typography variant="h4">
-          There are no unpaired ducks nearby.
+        <Typography variant="h6">
+          Sorry, but there are no unpaired ducks nearby.
         </Typography>
       )}
-      <Typography variant="h4">My Ducks</Typography>
-      <List>
-        {myDucks.map(value => {
-          return (
-            <ListItem key={value}>
-              <ListItemText primary={value} />
-              <ListItemSecondaryAction>
-                <IconButton onClick={() => unpairDuck(value)}>
-                  <RemoveCircleIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          );
-        })}
-      </List>
-    </Fragment>
+      <Typography variant="h5">Manage My Ducks</Typography>
+      <Typography variant="body1">
+        Want to see how many and which ducks you have linked to your account?
+        They are all listed below.
+      </Typography>
+      <Typography variant="body1">
+        Want to disconnect from a duck so others can try the expirence that is
+        Buck Duck? Just click the minus symbol in the circle next to the duck
+        you wish to unpair.
+      </Typography>
+      {myDucks.length > 0 && (
+        <List>
+          {myDucks.map(value => {
+            return (
+              <ListItem key={value}>
+                <Typography variant="h6">{value}</Typography>
+                <ListItemSecondaryAction>
+                  <IconButton onClick={() => unpairDuck(value)}>
+                    <RemoveCircleIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
+      )}
+      {myDucks.length === 0 && (
+        <Typography variant="h6">
+          You do not yet have any ducks. If one is nearby, you can add it above!
+        </Typography>
+      )}
+    </Paper>
   );
 };
 

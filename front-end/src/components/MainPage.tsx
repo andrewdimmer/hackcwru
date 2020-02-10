@@ -1,20 +1,17 @@
-import React, { Fragment, useState } from "react";
-import { User } from "firebase";
 import {
-  Typography,
   Button,
-  makeStyles,
-  Theme,
-  ButtonBase,
-  withStyles,
   Card,
+  CardActions,
   CardContent,
-  CardActions
+  Typography,
+  withStyles
 } from "@material-ui/core";
+import React, { Fragment } from "react";
 import ControlPage from "../../src/components/ControlPage";
-import LoginPage from "./LoginPage";
 import { firebaseApp, UserData } from "../firebase/config";
 import { getCreateUser } from "../firebase/user";
+import { styles } from "../Styles";
+import LoginPage from "./LoginPage";
 
 declare interface MainPageProps {
   getInitUserId: () => string;
@@ -139,31 +136,7 @@ const MainPage: React.FunctionComponent<MainPageProps> = ({
     firebaseApp.auth().signOut();
   };
 
-  //Taken off of the Material-ui.com website, from their complex button example
-  const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-      //minWidth: 275,
-      display: "flex",
-
-      "justify-content": "center",
-
-      "flex-direction": "column",
-
-      "align-items": "center",
-
-      "flex-wrap": "wrap"
-    },
-
-    title: {
-      fontSize: 14
-    },
-
-    pos: {
-      marginBottom: 12
-    }
-  }));
-
-  const classes = useStyles();
+  const classes = styles();
 
   const StyledButton = withStyles({
     root: {
@@ -240,24 +213,17 @@ const MainPage: React.FunctionComponent<MainPageProps> = ({
               userId={userId}
               userData={userData}
               unpairedDucks={unpairedDucks}
+              classes={classes}
             />
           )}
         </Fragment>
       )}
-      {/* <Button
-          variant="contained"
-          onClick={handleLoginButton}
-          className={classes.login}
-          color="primary"
-        >
-          Click here to login!
-        </Button> */}
       {!userId && !isLoggingIn && (
-        <span className={classes.root}>
-          <Card className={classes.root} variant="outlined">
-            <CardContent className={classes.root}>
+        <span className={classes.homeRoot}>
+          <Card className={classes.homeRoot} variant="outlined">
+            <CardContent className={classes.homeRoot}>
               <Typography
-                className={classes.title}
+                className={classes.homeTitle}
                 color="textSecondary"
                 gutterBottom
               >
@@ -266,7 +232,7 @@ const MainPage: React.FunctionComponent<MainPageProps> = ({
               <Typography variant="h3" component="h3" color="primary">
                 A Project Inspired By a Love of Ducks and Technology
               </Typography>
-              <Typography className={classes.pos} color="secondary">
+              <Typography className={classes.homePos} color="secondary">
                 Andrew Dimmer, Nathan Dimmer, James Lynott, Allison Broski
               </Typography>
               <Typography variant="body2" component="p" color="textPrimary">

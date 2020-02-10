@@ -91,3 +91,40 @@ export const updateFinanceMode = functions.https.onRequest(
       });
   }
 );
+
+export const duckQuack = functions.https.onRequest((request, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+  const duckId = request.body;
+  firebaseApp
+    .firestore()
+    .collection("ducks")
+    .doc("DUCKS")
+    .get()
+    .then(value => {
+      const data = value.data();
+      if (data) {
+        if (data.ducks[duckId] !== undefined) {
+          firebaseApp
+            .firestore()
+            .collection("ducks")
+            .doc(`${duckId}_quack`)
+            .set({ quacking: true })
+            .then(() => {
+              response.status(200).send("Quacking!");
+            })
+            .catch(err => {
+              console.log(err);
+              response.status(500).send("Unable to get duck to quack");
+            });
+        } else {
+          response.status(500).send("Unable to get duck to quack");
+        }
+      } else {
+        response.status(500).send("Unable to get duck to quack");
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      response.status(500).send("Unable to get duck to quack");
+    });
+});

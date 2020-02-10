@@ -1,8 +1,7 @@
-import firebase, { User } from "firebase";
+import firebase from "firebase";
 import * as firebaseui from "firebaseui";
 import React, { Fragment } from "react";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import { firebaseApp } from "../firebase/config";
 
 declare interface LoginProps {}
 

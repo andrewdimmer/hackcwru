@@ -128,3 +128,7 @@ export const unpairDuck = functions.https.onRequest((request, response) => {
       response.status(500).send("Unable to unpair duck and user");
     });
 });
+
+export const unpairAllDucks = functions.https.onRequest((request, response) => {
+  response.setHeader("Access-Control-Allow-Origin", "*");
+});
